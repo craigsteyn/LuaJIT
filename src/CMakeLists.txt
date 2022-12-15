@@ -23,7 +23,7 @@ set(MINILUA_EXE minilua)
 if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
   set(MINILUA_EXE minilua.exe)
 endif()
-set(MINILUA_PATH ${CMAKE_CURRENT_BINARY_DIR}/minilua/${MINILUA_EXE})
+set(MINILUA_PATH ${CMAKE_CURRENT_BINARY_DIR}/minilua/Release/${MINILUA_EXE})
 
 # Build the minilua for host platform
 if (NOT CMAKE_CROSSCOMPILING)
@@ -34,7 +34,7 @@ else()
 
   add_custom_command(OUTPUT ${MINILUA_PATH}
     COMMAND ${CMAKE_COMMAND} ${CMAKE_CURRENT_SOURCE_DIR}/host/cmake/minilua
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/minilua
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/minilua --config Release
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/minilua)
 
   add_custom_target(minilua ALL
@@ -317,15 +317,15 @@ if (NOT CMAKE_CROSSCOMPILING)
   set(BUILDVM_PATH $<TARGET_FILE:buildvm>)
   add_dependencies(buildvm buildvm_arch_h)
 else()
-  set(BUILDVM_PATH ${CMAKE_CURRENT_BINARY_DIR}/buildvm/${BUILDVM_EXE})
+  set(BUILDVM_PATH ${CMAKE_CURRENT_BINARY_DIR}/buildvm/Release/${BUILDVM_EXE})
 
-  find_program(DEFAULT_HOST_C_COMPILER "gcc")
-  find_program(DEFAULT_HOST_CXX_COMPILER "g++")
+  #find_program(DEFAULT_HOST_C_COMPILER "gcc")
+  #find_program(DEFAULT_HOST_CXX_COMPILER "g++")
   find_program(DEFAULT_HOST_CMAKE_COMMAND "cmake")
-  mark_as_advanced(DEFAULT_HOST_C_COMPILER DEFAULT_HOST_CXX_COMPILER DEFAULT_HOST_CMAKE_COMMAND)
+  #mark_as_advanced(DEFAULT_HOST_C_COMPILER DEFAULT_HOST_CXX_COMPILER DEFAULT_HOST_CMAKE_COMMAND)
 
-  set(HOST_CMAKE_COMMAND ${DEFAULT_HOST_CMAKE_COMMAND} CACHE STRING "Bypass the host CMake command")
-  set(HOST_C_COMPILER ${DEFAULT_HOST_C_COMPILER} CACHE STRING "Bypass the host C compiler command")
+  set(HOST_CMAKE_COMMAND "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe" CACHE STRING "Bypass the host CMake command")
+  set(HOST_C_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe" CACHE STRING "Bypass the host C compiler command")
   set(HOST_CXX_COMPILER ${DEFAULT_HOST_CXX_COMPILER} CACHE STRING "Bypass the host C++ compiler command")
 
   make_directory(${CMAKE_CURRENT_BINARY_DIR}/buildvm)
@@ -335,7 +335,7 @@ else()
             ${HOST_CMAKE_COMMAND} ${CMAKE_CURRENT_SOURCE_DIR}/host/cmake/buildvm
                                   -DEXTRA_COMPILER_FLAGS_FILE=${BUILDVM_COMPILER_FLAGS_PATH}
     COMMAND ${HOST_CMAKE_COMMAND} -E env CC="${HOST_C_COMPILER}" CXX="${HOST_CXX_COMPILER}"
-            ${HOST_CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/buildvm
+            ${HOST_CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/buildvm --config Release
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/host/cmake/buildvm/CMakeLists.txt
     DEPENDS buildvm_arch_h
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/buildvm)

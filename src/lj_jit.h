@@ -364,7 +364,11 @@ enum {
   LJ_K64_M2P64,		/* -2^64 */
 #endif
 #endif
+#if LJ_TARGET_ARM64
+  LJ_K64__MAX = 1
+#else
   LJ_K64__MAX,
+#endif
 };
 
 enum {
@@ -382,7 +386,11 @@ enum {
   LJ_K32_2P63,		/* 2^63 */
   LJ_K32_M2P64,		/* -2^64 */
 #endif
+#if LJ_TARGET_ARM64
+  LJ_K32__MAX = 1
+#else
   LJ_K32__MAX
+#endif
 };
 
 /* Get 16 byte aligned pointer to SIMD constant. */
